@@ -1,41 +1,41 @@
-require './test/test_helper'
+require "#{File.dirname(__FILE__)}/test_helper"
 
 class KMLFileTest < Test::Unit::TestCase
   include KML
-
+  
   def test_placemark
     kml = KMLFile.new
     kml.objects << Placemark.new(
-      :name => 'Simple placemark',
+      :name => 'Simple placemark', 
       :description => 'Attached to the ground. Intelligently places itself at the height of the underlying terrain.',
       :geometry => Point.new(:coordinates=>'-122.0822035425683,37.42228990140251,0')
     )
-    assert_equal File.read('test/simple_placemark.kml'), kml.render
+    write_and_show(kml, File.dirname(__FILE__) + '/simple_placemark.kml')
   end
-
+  
   def test_cdata_description
     description = <<-DESC
 <h1>CDATA Tags are useful!</h1>
-<p><font color="red">Text is <i>more readable</i> and
-<b>easier to write</b> when you can avoid using entity
+<p><font color="red">Text is <i>more readable</i> and 
+<b>easier to write</b> when you can avoid using entity 
 references.</font></p>
 DESC
-
+    
     kml = KMLFile.new
     document = Document.new(
-      :name => 'Document with CDATA example',
+      :name => 'Document with CDATA example', 
       :snippet => Snippet.new("Document level snippet")
     )
     document.features << Placemark.new(
-      :name => 'CDATA example',
+      :name => 'CDATA example', 
       :description => description,
       :snippet => Snippet.new("Example of a snippet"),
       :geometry => Point.new(:coordinates=>'-122.0822035425683,37.4228,0')
     )
     kml.objects << document
-    assert_equal File.read('test/cdata_and_snippet.kml'), kml.render
+    write_and_show(kml, File.dirname(__FILE__) + '/cdata_and_snippet.kml')
   end
-
+  
   def test_ground_overlays
     kml = KMLFile.new
     folder = Folder.new(
@@ -55,9 +55,9 @@ DESC
       )
     )
     kml.objects << folder
-    assert_equal File.read('test/ground_overlays.kml'), kml.render
+    write_and_show(kml, File.dirname(__FILE__) + '/ground_overlays.kml')
   end
-
+  
   def test_paths
     kml = KMLFile.new
     kml.objects << Document.new(
@@ -96,9 +96,10 @@ DESC
         )
       ]
     )
-    assert_equal File.read('test/paths.kml'), kml.render
+    #puts kml.render
+    write_and_show(kml, File.dirname(__FILE__) + '/paths.kml')
   end
-
+  
   def test_polygon
     kml = KMLFile.new
     kml.objects << Placemark.new(
@@ -107,26 +108,28 @@ DESC
         :extrude => true,
         :altitude_mode => 'relativeToGround',
         :outer_boundary_is => LinearRing.new(
-          :coordinates => '-77.05788457660967,38.87253259892824,100
-                      -77.05465973756702,38.87291016281703,100
-                      -77.05315536854791,38.87053267794386,100
-                      -77.05552622493516,38.868757801256,100
-                      -77.05844056290393,38.86996206506943,100
+          :coordinates => '-77.05788457660967,38.87253259892824,100 
+                      -77.05465973756702,38.87291016281703,100 
+                      -77.05315536854791,38.87053267794386,100 
+                      -77.05552622493516,38.868757801256,100 
+                      -77.05844056290393,38.86996206506943,100 
                       -77.05788457660967,38.87253259892824,100'
         ),
         :inner_boundary_is => LinearRing.new(
-          :coordinates => '-77.05668055019126,38.87154239798456,100
-                      -77.05542625960818,38.87167890344077,100
-                      -77.05485125901024,38.87076535397792,100
-                      -77.05577677433152,38.87008686581446,100
-                      -77.05691162017543,38.87054446963351,100
+          :coordinates => '-77.05668055019126,38.87154239798456,100 
+                      -77.05542625960818,38.87167890344077,100 
+                      -77.05485125901024,38.87076535397792,100 
+                      -77.05577677433152,38.87008686581446,100 
+                      -77.05691162017543,38.87054446963351,100 
                       -77.05668055019126,38.87154239798456,100'
         )
       )
     )
-    assert_equal File.read('test/polygon.kml'), kml.render
+    
+    #puts kml.render
+    write_and_show(kml, File.dirname(__FILE__) + '/polygon.kml')
   end
-
+  
   def test_geometry_styles
     kml = KMLFile.new
     kml.objects << Style.new(
@@ -167,10 +170,10 @@ DESC
         )
       )
     )
-
-    assert_equal File.read('test/polygon_style.kml'), kml.render
+    
+    write_and_show(kml, File.dirname(__FILE__) + '/polygon_style.kml')
   end
-
+  
   def test_style_map
     kml = KMLFile.new
     kml.objects << Document.new(
@@ -211,6 +214,7 @@ DESC
         )
       ]
     )
-    assert_equal File.read('test/style_map.kml'), kml.render
+    #puts kml.render
+    write_and_show(kml, File.dirname(__FILE__) + '/style_map.kml')
   end
 end
